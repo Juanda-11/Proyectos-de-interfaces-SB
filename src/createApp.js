@@ -20,8 +20,8 @@ export function createApp({
   config,
   gemini = createGeminiClient(config.gemini),
   logger = createLogger({ silent: config.env === 'test' }),
+  app = express(),
 }) {
-  const app = express();
   const assistant = createAssistant(gemini);
 
   app.disable('x-powered-by');
