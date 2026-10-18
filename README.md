@@ -98,16 +98,16 @@ Para probar un despliegue ya publicado: `API_URL=https://tu-api.vercel.app npm r
 2. En **Settings → Environment Variables** agrega `GEMINI_API_KEY` y `CORS_ORIGINS` (URL del frontend).
 3. Deploy. Comprueba `https://<tu-api>.vercel.app/api/health` → debe decir `"ai": "configured"`.
 
-`vercel.json` reescribe todas las rutas hacia `api/index.js`, que exporta la app de Express como función serverless. Más detalles en [`docs/ARQUITECTURA.md`](docs/ARQUITECTURA.md).
+El preset **Express** de Vercel detecta `src/index.js`, que exporta la app (`export default app`) y la sirve como función serverless. Más detalles en [`docs/ARQUITECTURA.md`](docs/ARQUITECTURA.md).
 
 También hay un `Dockerfile` si prefieres desplegarlo en otro servicio.
 
 ## Estructura
 
 ```
-api/index.js            Entrada serverless (Vercel)
+src/index.js            Entrada serverless (Vercel): export default app
 src/
-  app.js                Fábrica de la app Express (inyectable para pruebas)
+  createApp.js          Fábrica de la app Express (inyectable para pruebas)
   server.js             Arranque local
   config.js             Variables de entorno validadas con Zod
   routes/               health, diagnose, chat

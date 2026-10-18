@@ -21,13 +21,13 @@ sequenceDiagram
 
 ## Capas
 
-| Capa         | Archivo                     | Responsabilidad                                                 |
-| ------------ | --------------------------- | --------------------------------------------------------------- |
-| HTTP         | `src/app.js`, `middleware/` | Seguridad, CORS, límites, logs y formato uniforme de errores    |
-| Rutas        | `src/routes/`               | Validan la entrada y delegan en los casos de uso                |
-| Casos de uso | `services/assistant.js`     | Construyen el prompt, validan y normalizan la salida            |
-| Proveedor IA | `services/gemini.js`        | Llamada REST, modelos de respaldo, timeout, extracción del JSON |
-| Dominio IA   | `services/prompts.js`       | Reglas de seguridad y estilo del asistente                      |
+| Capa         | Archivo                           | Responsabilidad                                                 |
+| ------------ | --------------------------------- | --------------------------------------------------------------- |
+| HTTP         | `src/createApp.js`, `middleware/` | Seguridad, CORS, límites, logs y formato uniforme de errores    |
+| Rutas        | `src/routes/`                     | Validan la entrada y delegan en los casos de uso                |
+| Casos de uso | `services/assistant.js`           | Construyen el prompt, validan y normalizan la salida            |
+| Proveedor IA | `services/gemini.js`              | Llamada REST, modelos de respaldo, timeout, extracción del JSON |
+| Dominio IA   | `services/prompts.js`             | Reglas de seguridad y estilo del asistente                      |
 
 `createApp({ config, gemini })` recibe el cliente de Gemini por parámetro: las pruebas inyectan uno falso y la suite completa corre sin red ni cuota.
 
@@ -57,7 +57,7 @@ Los detalles técnicos van a los logs (con `requestId`); al cliente solo llega u
 
 ## Despliegue serverless
 
-`api/index.js` exporta la app de Express; `vercel.json` reescribe todas las rutas hacia ella. Cada instancia es efímera, por eso el backend es **sin estado** (no guarda sesiones: el reloj envía el contexto necesario en cada petición). Consecuencia: el límite de peticiones es por instancia y funciona como protección de mejor esfuerzo.
+`src/index.js` exporta la app de Express (`export default app`) y el preset Express de Vercel la sirve como función. Cada instancia es efímera, por eso el backend es **sin estado** (no guarda sesiones: el reloj envía el contexto necesario en cada petición). Consecuencia: el límite de peticiones es por instancia y funciona como protección de mejor esfuerzo.
 
 ## Mejoras futuras
 
