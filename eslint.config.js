@@ -1,0 +1,18 @@
+import js from '@eslint/js';
+import globals from 'globals';
+
+export default [
+  { ignores: ['node_modules/*', 'coverage/*', '.vercel/*'] },
+  js.configs.recommended,
+  {
+    languageOptions: { ecmaVersion: 2023, sourceType: 'module', globals: { ...globals.node } },
+    rules: {
+      'no-console': ['warn', { allow: ['warn', 'error'] }],
+      'no-unused-vars': ['error', { argsIgnorePattern: '^_', caughtErrors: 'none' }],
+    },
+  },
+  {
+    files: ['scripts/**', 'src/server.js', 'src/lib/logger.js'],
+    rules: { 'no-console': 'off' },
+  },
+];
