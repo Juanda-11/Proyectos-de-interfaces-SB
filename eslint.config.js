@@ -12,7 +12,7 @@ export default [
     },
   },
   {
-    files: ['scripts/**'],
+    files: ['scripts/**', 'src/server.js', 'src/lib/logger.js'],
     rules: { 'no-console': 'off' },
   },
 ];
