@@ -24,7 +24,10 @@ const stepsSchema = {
     type: 'OBJECT',
     properties: {
       title: { type: 'STRING', description: 'Instrucción en imperativo, máximo 32 caracteres' },
-      voice: { type: 'STRING', description: 'Frase corta para decir en voz alta, máximo 25 palabras' },
+      voice: {
+        type: 'STRING',
+        description: 'Frase corta para decir en voz alta, máximo 25 palabras',
+      },
     },
     required: ['title', 'voice'],
   },
@@ -35,7 +38,10 @@ export const geminiPlanSchema = {
   properties: {
     summary: { type: 'STRING', description: 'Qué ocurre, máximo 8 palabras' },
     severity: { type: 'STRING', enum: ['medium', 'high', 'critical'] },
-    escalate: { type: 'BOOLEAN', description: 'true si debe avisar a un supervisor o mantenimiento' },
+    escalate: {
+      type: 'BOOLEAN',
+      description: 'true si debe avisar a un supervisor o mantenimiento',
+    },
     steps: stepsSchema,
   },
   required: ['summary', 'severity', 'escalate', 'steps'],

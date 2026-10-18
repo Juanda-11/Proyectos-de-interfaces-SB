@@ -7,7 +7,6 @@ export function notFoundHandler(_req, _res, next) {
 
 // Respuesta de error uniforme: { error: { code, message, requestId, details? } }
 export function errorHandler(logger) {
-  // eslint-disable-next-line no-unused-vars
   return (err, req, res, _next) => {
     let status = 500;
     let code = 'internal_error';
@@ -35,6 +34,8 @@ export function errorHandler(logger) {
     const log = status >= 500 ? logger.error : logger.warn;
     log(message, { requestId: req.id, code, status, cause: err?.cause?.message ?? err?.message });
 
-    res.status(status).json({ error: { code, message, requestId: req.id, ...(details ? { details } : {}) } });
+    res
+      .status(status)
+      .json({ error: { code, message, requestId: req.id, ...(details ? { details } : {}) } });
   };
 }

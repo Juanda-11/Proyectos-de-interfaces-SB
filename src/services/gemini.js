@@ -16,7 +16,8 @@ function extractText(data) {
     .map((p) => p.text ?? '')
     .join('')
     .trim();
-  if (!text) throw errors.aiInvalidResponse(new Error(`Respuesta vacía (${candidate.finishReason})`));
+  if (!text)
+    throw errors.aiInvalidResponse(new Error(`Respuesta vacía (${candidate.finishReason})`));
   return text;
 }
 

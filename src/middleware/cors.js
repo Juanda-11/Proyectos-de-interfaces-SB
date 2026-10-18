@@ -15,7 +15,10 @@ export function corsMiddleware(allowedOrigins) {
     origin: (origin, callback) => {
       // Sin cabecera Origin (curl, apps nativas como el APK del reloj): se permite.
       if (!origin) return callback(null, true);
-      callback(null, matchers.some((match) => match(origin)));
+      callback(
+        null,
+        matchers.some((match) => match(origin))
+      );
     },
     methods: ['GET', 'POST', 'OPTIONS'],
     maxAge: 600,

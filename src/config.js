@@ -11,9 +11,15 @@ const schema = z.object({
     emptyToUndefined,
     z.string().default('gemini-2.5-flash,gemini-2.5-flash-lite')
   ),
-  GEMINI_TIMEOUT_MS: z.preprocess(emptyToUndefined, z.coerce.number().int().positive().default(20000)),
+  GEMINI_TIMEOUT_MS: z.preprocess(
+    emptyToUndefined,
+    z.coerce.number().int().positive().default(20000)
+  ),
   CORS_ORIGINS: z.preprocess(emptyToUndefined, z.string().default('*')),
-  RATE_LIMIT_PER_MINUTE: z.preprocess(emptyToUndefined, z.coerce.number().int().positive().default(30)),
+  RATE_LIMIT_PER_MINUTE: z.preprocess(
+    emptyToUndefined,
+    z.coerce.number().int().positive().default(30)
+  ),
 });
 
 const list = (value) =>
