@@ -1,7 +1,7 @@
 // Prueba de humo contra la IA real: verifica que la clave y el modelo funcionan.
 //   GEMINI_API_KEY=... npm run smoke            (llama directamente a Gemini)
 //   API_URL=https://tu-api.vercel.app npm run smoke   (prueba un despliegue)
-import { createApp } from '../src/app.js';
+import { createApp } from '../src/createApp.js';
 import { loadConfig } from '../src/config.js';
 
 const body = {

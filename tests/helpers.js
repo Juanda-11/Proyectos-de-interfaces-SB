@@ -1,4 +1,4 @@
-import { createApp } from '../src/app.js';
+import { createApp } from '../src/createApp.js';
 import { loadConfig } from '../src/config.js';
 
 export const baseConfig = (overrides = {}) =>
