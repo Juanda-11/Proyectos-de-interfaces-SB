@@ -1,0 +1,163 @@
+openapi: 3.0.3
+info:
+  title: WorkerWatch API
+  version: 1.0.0
+  description: |
+    Backend del asistente WorkerWatch. Actúa como proxy seguro hacia Gemini: la clave nunca llega al reloj.
+    Todos los errores usan el formato `{ "error": { "code", "message", "requestId", "details?" } }`.
+servers:
+  - url: http://localhost:3001
+    description: Local
+paths:
+  /api/health:
+    get:
+      summary: Estado del servicio
+      responses:
+        '200':
+          description: Servicio activo
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status: { type: string, example: ok }
+                  version: { type: string, example: 1.0.0 }
+                  ai: { type: string, enum: [configured, missing-key] }
+                  model: { type: string, example: gemini-flash-latest }
+                  uptime: { type: integer, description: Segundos desde el arranque }
+  /api/diagnose:
+    post:
+      summary: Plan de reparación para una falla
+      description: Requiere `fault` (alerta del sensor) o `description` (texto libre del trabajador).
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/DiagnoseRequest' }
+      responses:
+        '200':
+          description: Plan paso a paso
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Plan' }
+        '400': { $ref: '#/components/responses/Error' }
+        '429': { $ref: '#/components/responses/Error' }
+        '502': { $ref: '#/components/responses/Error' }
+        '503': { $ref: '#/components/responses/Error' }
+        '504': { $ref: '#/components/responses/Error' }
+  /api/chat:
+    post:
+      summary: Pregunta de seguimiento o nuevo problema
+      description: |
+        Responde en `reply` (para decir en voz alta). Si el trabajador describe un problema distinto,
+        incluye además `steps` con un plan nuevo.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/ChatRequest' }
+      responses:
+        '200':
+          description: Respuesta del asistente
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ChatResponse' }
+        '400': { $ref: '#/components/responses/Error' }
+        '429': { $ref: '#/components/responses/Error' }
+        '502': { $ref: '#/components/responses/Error' }
+        '503': { $ref: '#/components/responses/Error' }
+        '504': { $ref: '#/components/responses/Error' }
+components:
+  responses:
+    Error:
+      description: Error
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+  schemas:
+    Machine:
+      type: object
+      required: [typeId, typeLabel, name]
+      properties:
+        typeId: { type: string, maxLength: 40, example: press }
+        typeLabel: { type: string, maxLength: 60, example: Prensa hidráulica }
+        name: { type: string, maxLength: 60, example: 'Prensa hidráulica #02' }
+    Fault:
+      type: object
+      required: [title]
+      properties:
+        title: { type: string, maxLength: 80, example: FUGA DE ACEITE }
+        metric: { type: string, maxLength: 60, example: Presión de aceite }
+        reading: { type: string, maxLength: 40, example: 72 bar }
+    DiagnoseRequest:
+      type: object
+      required: [machine]
+      properties:
+        machine: { $ref: '#/components/schemas/Machine' }
+        fault: { allOf: [{ $ref: '#/components/schemas/Fault' }], nullable: true }
+        description: { type: string, maxLength: 400, example: Hace un ruido metálico al bajar }
+        language: { type: string, enum: [es], default: es }
+    ChatRequest:
+      type: object
+      required: [machine, message]
+      properties:
+        machine: { $ref: '#/components/schemas/Machine' }
+        fault: { allOf: [{ $ref: '#/components/schemas/Fault' }], nullable: true }
+        steps:
+          type: array
+          maxItems: 8
+          items:
+            type: object
+            required: [title]
+            properties: { title: { type: string, maxLength: 80 } }
+        currentStep: { type: integer, minimum: 0, maximum: 7 }
+        message: { type: string, maxLength: 400, example: ¿Cuál es la válvula de vapor? }
+        history:
+          type: array
+          maxItems: 8
+          items:
+            type: object
+            required: [role, text]
+            properties:
+              role: { type: string, enum: [user, assistant] }
+              text: { type: string, maxLength: 600 }
+    Step:
+      type: object
+      properties:
+        id: { type: integer, example: 1 }
+        title: { type: string, maxLength: 40, example: Detén la prensa }
+        voice: { type: string, example: Paso uno. Detén la prensa y aplica el bloqueo de energía. }
+    Plan:
+      type: object
+      properties:
+        summary: { type: string }
+        severity: { type: string, enum: [medium, high, critical] }
+        escalate: { type: boolean, description: true si debe avisar a un supervisor o a mantenimiento }
+        steps:
+          type: array
+          items: { $ref: '#/components/schemas/Step' }
+        source: { type: string, example: gemini }
+        model: { type: string, example: gemini-flash-latest }
+    ChatResponse:
+      type: object
+      properties:
+        reply: { type: string }
+        steps:
+          type: array
+          items: { $ref: '#/components/schemas/Step' }
+        severity: { type: string, enum: [medium, high, critical] }
+        escalate: { type: boolean }
+        source: { type: string }
+        model: { type: string }
+    Error:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code:
+              type: string
+              enum: [invalid_request, invalid_json, payload_too_large, not_found, rate_limited, ai_not_configured, ai_rate_limited, ai_timeout, ai_blocked, ai_upstream_error, ai_invalid_response, internal_error]
+            message: { type: string }
+            requestId: { type: string }
+            details: { type: array, items: { type: object } }
