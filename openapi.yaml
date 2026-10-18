@@ -111,7 +111,7 @@ components:
             required: [title]
             properties: { title: { type: string, maxLength: 80 } }
         currentStep: { type: integer, minimum: 0, maximum: 7 }
-        message: { type: string, maxLength: 400, example: ¿Cuál es la válvula de vapor? }
+        message: { type: string, maxLength: 400, example: '¿Cuál es la válvula de vapor?' }
         history:
           type: array
           maxItems: 8
@@ -132,7 +132,7 @@ components:
       properties:
         summary: { type: string }
         severity: { type: string, enum: [medium, high, critical] }
-        escalate: { type: boolean, description: true si debe avisar a un supervisor o a mantenimiento }
+        escalate: { type: boolean, description: 'true si debe avisar a un supervisor o a mantenimiento' }
         steps:
           type: array
           items: { $ref: '#/components/schemas/Step' }
