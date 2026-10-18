@@ -18,7 +18,6 @@ export function fakeGemini(handler) {
   };
 }
 
-export const appWith = (gemini, overrides) =>
-  createApp({ config: baseConfig(overrides), gemini });
+export const appWith = (gemini, overrides) => createApp({ config: baseConfig(overrides), gemini });
 
 export const machine = { typeId: 'boiler', typeLabel: 'Caldera', name: 'Caldera #04' };

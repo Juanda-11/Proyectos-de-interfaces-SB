@@ -132,7 +132,8 @@ components:
       properties:
         summary: { type: string }
         severity: { type: string, enum: [medium, high, critical] }
-        escalate: { type: boolean, description: 'true si debe avisar a un supervisor o a mantenimiento' }
+        escalate:
+          { type: boolean, description: 'true si debe avisar a un supervisor o a mantenimiento' }
         steps:
           type: array
           items: { $ref: '#/components/schemas/Step' }
@@ -157,7 +158,21 @@ components:
           properties:
             code:
               type: string
-              enum: [invalid_request, invalid_json, payload_too_large, not_found, rate_limited, ai_not_configured, ai_rate_limited, ai_timeout, ai_blocked, ai_upstream_error, ai_invalid_response, internal_error]
+              enum:
+                [
+                  invalid_request,
+                  invalid_json,
+                  payload_too_large,
+                  not_found,
+                  rate_limited,
+                  ai_not_configured,
+                  ai_rate_limited,
+                  ai_timeout,
+                  ai_blocked,
+                  ai_upstream_error,
+                  ai_invalid_response,
+                  internal_error,
+                ]
             message: { type: string }
             requestId: { type: string }
             details: { type: array, items: { type: object } }

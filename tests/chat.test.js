@@ -4,7 +4,10 @@ import { appWith, fakeGemini, machine } from './helpers.js';
 
 describe('POST /api/chat', () => {
   it('responde una aclaración sin plan nuevo', async () => {
-    const gemini = fakeGemini(() => ({ data: { reply: 'Cierra la válvula roja a tu derecha.' }, model: 'm' }));
+    const gemini = fakeGemini(() => ({
+      data: { reply: 'Cierra la válvula roja a tu derecha.' },
+      model: 'm',
+    }));
     const res = await request(appWith(gemini))
       .post('/api/chat')
       .send({
@@ -31,8 +34,12 @@ describe('POST /api/chat', () => {
       },
       model: 'm',
     }));
-    const res = await request(appWith(gemini)).post('/api/chat').send({ machine, message: 'gotea aceite' });
-    expect(res.body.steps).toEqual([{ id: 1, title: 'Detén la prensa', voice: 'Paso uno. Detén la prensa.' }]);
+    const res = await request(appWith(gemini))
+      .post('/api/chat')
+      .send({ machine, message: 'gotea aceite' });
+    expect(res.body.steps).toEqual([
+      { id: 1, title: 'Detén la prensa', voice: 'Paso uno. Detén la prensa.' },
+    ]);
     expect(res.body.escalate).toBe(true);
   });
 

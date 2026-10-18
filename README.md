@@ -6,7 +6,7 @@ API del proyecto **WorkerWatch**, un asistente con IA para smartwatch dirigido a
 
 ## ¿Por qué existe un backend?
 
-La clave de Gemini **no puede ir dentro de la app** (cualquiera podría extraerla del bundle web o del APK). El reloj habla con esta API y ella habla con Gemini. Además, aquí viven la validación, el límite de peticiones, las reglas de seguridad del *prompt* y la normalización de la respuesta.
+La clave de Gemini **no puede ir dentro de la app** (cualquiera podría extraerla del bundle web o del APK). El reloj habla con esta API y ella habla con Gemini. Además, aquí viven la validación, el límite de peticiones, las reglas de seguridad del _prompt_ y la normalización de la respuesta.
 
 ```mermaid
 flowchart LR
@@ -18,10 +18,10 @@ flowchart LR
 
 ## Endpoints
 
-| Método | Ruta            | Descripción                                                       |
-| ------ | --------------- | ----------------------------------------------------------------- |
-| GET    | `/api/health`   | Estado, versión, modelo y si hay clave de Gemini configurada      |
-| POST   | `/api/diagnose` | Plan paso a paso para una alerta del sensor o una descripción     |
+| Método | Ruta            | Descripción                                                        |
+| ------ | --------------- | ------------------------------------------------------------------ |
+| GET    | `/api/health`   | Estado, versión, modelo y si hay clave de Gemini configurada       |
+| POST   | `/api/diagnose` | Plan paso a paso para una alerta del sensor o una descripción      |
 | POST   | `/api/chat`     | Pregunta de seguimiento; si es un problema nuevo, devuelve un plan |
 
 Especificación completa en [`openapi.yaml`](openapi.yaml). Ejemplo:
@@ -41,7 +41,11 @@ curl -X POST http://localhost:3001/api/diagnose \
   "severity": "high",
   "escalate": true,
   "steps": [
-    { "id": 1, "title": "Detén la prensa y bloquéala", "voice": "Paso uno. Detén la prensa y aplica el bloqueo de energía." }
+    {
+      "id": 1,
+      "title": "Detén la prensa y bloquéala",
+      "voice": "Paso uno. Detén la prensa y aplica el bloqueo de energía."
+    }
   ],
   "source": "gemini",
   "model": "gemini-flash-latest"
@@ -64,33 +68,33 @@ Clave gratuita de Gemini: <https://aistudio.google.com/apikey>.
 
 ### Variables de entorno
 
-| Variable                 | Por defecto                                | Descripción                                              |
-| ------------------------ | ------------------------------------------ | -------------------------------------------------------- |
-| `GEMINI_API_KEY`         | —                                          | Clave de Google AI Studio (obligatoria para usar la IA)  |
-| `GEMINI_MODEL`           | `gemini-flash-latest`                      | Modelo principal                                         |
-| `GEMINI_FALLBACK_MODELS` | `gemini-2.5-flash,gemini-2.5-flash-lite`   | Modelos de respaldo si el principal no existe o está saturado |
-| `GEMINI_TIMEOUT_MS`      | `20000`                                    | Tiempo máximo por modelo                                 |
-| `CORS_ORIGINS`           | `*`                                        | Orígenes permitidos; admite `https://*.vercel.app`       |
-| `RATE_LIMIT_PER_MINUTE`  | `30`                                       | Peticiones por IP y minuto a `/diagnose` y `/chat`       |
-| `PORT`                   | `3001`                                     | Solo en local                                            |
+| Variable                 | Por defecto                              | Descripción                                                   |
+| ------------------------ | ---------------------------------------- | ------------------------------------------------------------- |
+| `GEMINI_API_KEY`         | —                                        | Clave de Google AI Studio (obligatoria para usar la IA)       |
+| `GEMINI_MODEL`           | `gemini-flash-latest`                    | Modelo principal                                              |
+| `GEMINI_FALLBACK_MODELS` | `gemini-2.5-flash,gemini-2.5-flash-lite` | Modelos de respaldo si el principal no existe o está saturado |
+| `GEMINI_TIMEOUT_MS`      | `20000`                                  | Tiempo máximo por modelo                                      |
+| `CORS_ORIGINS`           | `*`                                      | Orígenes permitidos; admite `https://*.vercel.app`            |
+| `RATE_LIMIT_PER_MINUTE`  | `30`                                     | Peticiones por IP y minuto a `/diagnose` y `/chat`            |
+| `PORT`                   | `3001`                                   | Solo en local                                                 |
 
 > En producción define `CORS_ORIGINS` con la URL de tu frontend en lugar de `*`.
 
 ## Scripts
 
-| Comando           | Qué hace                                                        |
-| ----------------- | --------------------------------------------------------------- |
-| `npm run dev`     | Servidor con recarga automática                                 |
-| `npm start`       | Servidor de producción                                          |
-| `npm test`        | Pruebas con Vitest (la IA se simula, no gasta cuota)            |
-| `npm run lint`    | ESLint                                                          |
-| `npm run smoke`   | Llama a **Gemini real** para comprobar clave y modelo           |
+| Comando         | Qué hace                                              |
+| --------------- | ----------------------------------------------------- |
+| `npm run dev`   | Servidor con recarga automática                       |
+| `npm start`     | Servidor de producción                                |
+| `npm test`      | Pruebas con Vitest (la IA se simula, no gasta cuota)  |
+| `npm run lint`  | ESLint                                                |
+| `npm run smoke` | Llama a **Gemini real** para comprobar clave y modelo |
 
 Para probar un despliegue ya publicado: `API_URL=https://tu-api.vercel.app npm run smoke`.
 
 ## Despliegue en Vercel
 
-1. Importa este repositorio en [vercel.com/new](https://vercel.com/new) (Framework: *Other*).
+1. Importa este repositorio en [vercel.com/new](https://vercel.com/new) (Framework: _Other_).
 2. En **Settings → Environment Variables** agrega `GEMINI_API_KEY` y `CORS_ORIGINS` (URL del frontend).
 3. Deploy. Comprueba `https://<tu-api>.vercel.app/api/health` → debe decir `"ai": "configured"`.
 

@@ -21,13 +21,13 @@ sequenceDiagram
 
 ## Capas
 
-| Capa        | Archivo                      | Responsabilidad                                                  |
-| ----------- | ---------------------------- | ---------------------------------------------------------------- |
-| HTTP        | `src/app.js`, `middleware/`  | Seguridad, CORS, límites, logs y formato uniforme de errores     |
-| Rutas       | `src/routes/`                | Validan la entrada y delegan en los casos de uso                 |
-| Casos de uso| `services/assistant.js`      | Construyen el prompt, validan y normalizan la salida             |
-| Proveedor IA| `services/gemini.js`         | Llamada REST, modelos de respaldo, timeout, extracción del JSON  |
-| Dominio IA  | `services/prompts.js`        | Reglas de seguridad y estilo del asistente                       |
+| Capa         | Archivo                     | Responsabilidad                                                 |
+| ------------ | --------------------------- | --------------------------------------------------------------- |
+| HTTP         | `src/app.js`, `middleware/` | Seguridad, CORS, límites, logs y formato uniforme de errores    |
+| Rutas        | `src/routes/`               | Validan la entrada y delegan en los casos de uso                |
+| Casos de uso | `services/assistant.js`     | Construyen el prompt, validan y normalizan la salida            |
+| Proveedor IA | `services/gemini.js`        | Llamada REST, modelos de respaldo, timeout, extracción del JSON |
+| Dominio IA   | `services/prompts.js`       | Reglas de seguridad y estilo del asistente                      |
 
 `createApp({ config, gemini })` recibe el cliente de Gemini por parámetro: las pruebas inyectan uno falso y la suite completa corre sin red ni cuota.
 
@@ -42,16 +42,16 @@ El reloj tiene una pantalla redonda y habla en voz alta, así que no se confía 
 
 ## Manejo de errores
 
-| Código               | HTTP | Cuándo                                                  | Qué hace el reloj          |
-| -------------------- | ---- | ------------------------------------------------------- | -------------------------- |
-| `invalid_request`    | 400  | El cuerpo no cumple el esquema                          | Error de programación      |
-| `rate_limited`       | 429  | Demasiadas peticiones desde una IP                      | Plan local                 |
-| `ai_not_configured`  | 503  | Falta `GEMINI_API_KEY`                                  | Plan local                 |
-| `ai_rate_limited`    | 429  | Cuota gratuita de Gemini agotada                        | Plan local                 |
-| `ai_timeout`         | 504  | Ningún modelo respondió a tiempo                        | Plan local                 |
-| `ai_blocked`         | 422  | Filtros de seguridad de Gemini                          | Plan local                 |
-| `ai_upstream_error`  | 502  | Error de Google (clave inválida, 4xx, 5xx)              | Plan local                 |
-| `ai_invalid_response`| 502  | La IA no devolvió el JSON esperado                      | Plan local                 |
+| Código                | HTTP | Cuándo                                     | Qué hace el reloj     |
+| --------------------- | ---- | ------------------------------------------ | --------------------- |
+| `invalid_request`     | 400  | El cuerpo no cumple el esquema             | Error de programación |
+| `rate_limited`        | 429  | Demasiadas peticiones desde una IP         | Plan local            |
+| `ai_not_configured`   | 503  | Falta `GEMINI_API_KEY`                     | Plan local            |
+| `ai_rate_limited`     | 429  | Cuota gratuita de Gemini agotada           | Plan local            |
+| `ai_timeout`          | 504  | Ningún modelo respondió a tiempo           | Plan local            |
+| `ai_blocked`          | 422  | Filtros de seguridad de Gemini             | Plan local            |
+| `ai_upstream_error`   | 502  | Error de Google (clave inválida, 4xx, 5xx) | Plan local            |
+| `ai_invalid_response` | 502  | La IA no devolvió el JSON esperado         | Plan local            |
 
 Los detalles técnicos van a los logs (con `requestId`); al cliente solo llega un mensaje genérico.
 

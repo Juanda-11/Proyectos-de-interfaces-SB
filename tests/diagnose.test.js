@@ -48,19 +48,28 @@ describe('POST /api/diagnose', () => {
   });
 
   it('marca como escalado un plan crítico', async () => {
-    const gemini = fakeGemini(() => ({ data: { ...plan, severity: 'critical', escalate: false }, model: 'm' }));
-    const res = await request(appWith(gemini)).post('/api/diagnose').send({ machine, description: 'huele a gas' });
+    const gemini = fakeGemini(() => ({
+      data: { ...plan, severity: 'critical', escalate: false },
+      model: 'm',
+    }));
+    const res = await request(appWith(gemini))
+      .post('/api/diagnose')
+      .send({ machine, description: 'huele a gas' });
     expect(res.body.escalate).toBe(true);
   });
 
   it('acepta solo descripción en texto libre', async () => {
     const gemini = fakeGemini(() => ({ data: plan, model: 'm' }));
-    const res = await request(appWith(gemini)).post('/api/diagnose').send({ machine, description: 'hace ruido' });
+    const res = await request(appWith(gemini))
+      .post('/api/diagnose')
+      .send({ machine, description: 'hace ruido' });
     expect(res.status).toBe(200);
   });
 
   it('exige falla o descripción', async () => {
-    const res = await request(appWith(fakeGemini(() => ({})))).post('/api/diagnose').send({ machine });
+    const res = await request(appWith(fakeGemini(() => ({}))))
+      .post('/api/diagnose')
+      .send({ machine });
     expect(res.status).toBe(400);
     expect(res.body.error.code).toBe('invalid_request');
   });
@@ -94,7 +103,9 @@ describe('POST /api/diagnose', () => {
 
   it('responde 502 si la IA devuelve una estructura inválida', async () => {
     const gemini = fakeGemini(() => ({ data: { steps: [] }, model: 'm' }));
-    const res = await request(appWith(gemini)).post('/api/diagnose').send({ machine, description: 'x' });
+    const res = await request(appWith(gemini))
+      .post('/api/diagnose')
+      .send({ machine, description: 'x' });
     expect(res.status).toBe(502);
     expect(res.body.error.code).toBe('ai_invalid_response');
   });
