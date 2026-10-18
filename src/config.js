@@ -11,6 +11,7 @@ const schema = z.object({
     emptyToUndefined,
     z.string().default('gemini-2.5-flash,gemini-2.5-flash-lite')
   ),
+  GEMINI_BASE_URL: z.preprocess(emptyToUndefined, z.url().optional()),
   GEMINI_TIMEOUT_MS: z.preprocess(
     emptyToUndefined,
     z.coerce.number().int().positive().default(20000)
@@ -44,6 +45,7 @@ export function loadConfig(env = process.env) {
       model: e.GEMINI_MODEL,
       fallbackModels: list(e.GEMINI_FALLBACK_MODELS),
       timeoutMs: e.GEMINI_TIMEOUT_MS,
+      baseUrl: e.GEMINI_BASE_URL,
     },
     corsOrigins: list(e.CORS_ORIGINS),
     rateLimitPerMinute: e.RATE_LIMIT_PER_MINUTE,

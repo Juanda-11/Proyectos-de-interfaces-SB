@@ -41,15 +41,16 @@ export function createGeminiClient({
   fallbackModels = [],
   timeoutMs = 20000,
   fetchImpl = globalThis.fetch,
-  baseUrl = BASE_URL,
+  baseUrl,
 }) {
+  const root = (baseUrl ?? BASE_URL).replace(/\/+$/, '');
   const models = [model, ...fallbackModels.filter((m) => m !== model)];
 
   async function callModel(name, body) {
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), timeoutMs);
     try {
-      const res = await fetchImpl(`${baseUrl}/models/${encodeURIComponent(name)}:generateContent`, {
+      const res = await fetchImpl(`${root}/models/${encodeURIComponent(name)}:generateContent`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'x-goog-api-key': apiKey },
         body: JSON.stringify(body),
