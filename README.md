@@ -60,11 +60,11 @@ Requisitos: Node.js ≥ 20.6.
 
 ```bash
 npm install
-cp .env.example .env      # y pega tu GEMINI_API_KEY
+cp .env.example .env      # completar GEMINI_API_KEY
 npm run dev               # http://localhost:3001
 ```
 
-Clave gratuita de Gemini: <https://aistudio.google.com/apikey>.
+La clave gratuita de Gemini se genera en <https://aistudio.google.com/apikey>.
 
 ### Variables de entorno
 
@@ -78,7 +78,7 @@ Clave gratuita de Gemini: <https://aistudio.google.com/apikey>.
 | `RATE_LIMIT_PER_MINUTE`  | `30`                                     | Peticiones por IP y minuto a `/diagnose` y `/chat`            |
 | `PORT`                   | `3001`                                   | Solo en local                                                 |
 
-> En producción define `CORS_ORIGINS` con la URL de tu frontend en lugar de `*`.
+> En producción `CORS_ORIGINS` debe contener la URL del frontend en lugar de `*`.
 
 ## Scripts
 
@@ -90,17 +90,17 @@ Clave gratuita de Gemini: <https://aistudio.google.com/apikey>.
 | `npm run lint`  | ESLint                                                |
 | `npm run smoke` | Llama a **Gemini real** para comprobar clave y modelo |
 
-Para probar un despliegue ya publicado: `API_URL=https://tu-api.vercel.app npm run smoke`.
+Para probar un despliegue publicado: `API_URL=https://<api>.vercel.app npm run smoke`.
 
 ## Despliegue en Vercel
 
-1. Importa este repositorio en [vercel.com/new](https://vercel.com/new) (Framework: _Other_).
-2. En **Settings → Environment Variables** agrega `GEMINI_API_KEY` y `CORS_ORIGINS` (URL del frontend).
-3. Deploy. Comprueba `https://<tu-api>.vercel.app/api/health` → debe decir `"ai": "configured"`.
+1. Importar el repositorio en [vercel.com/new](https://vercel.com/new). El preset detectado es **Express**.
+2. En **Settings → Environment Variables** definir `GEMINI_API_KEY` y `CORS_ORIGINS` (URL del frontend).
+3. Desplegar y verificar `https://<api>.vercel.app/api/health`, que debe responder `"ai": "configured"`.
 
 El preset **Express** de Vercel detecta `src/index.js`, que exporta la app (`export default app`) y la sirve como función serverless. Más detalles en [`docs/ARQUITECTURA.md`](docs/ARQUITECTURA.md).
 
-También hay un `Dockerfile` si prefieres desplegarlo en otro servicio.
+El `Dockerfile` incluido permite desplegarlo también en otros servicios.
 
 ## Estructura
 
