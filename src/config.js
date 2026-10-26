@@ -6,15 +6,15 @@ const schema = z.object({
   NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
   PORT: z.preprocess(emptyToUndefined, z.coerce.number().int().positive().default(3001)),
   GEMINI_API_KEY: z.preprocess(emptyToUndefined, z.string().min(10).optional()),
-  GEMINI_MODEL: z.preprocess(emptyToUndefined, z.string().default('gemini-flash-latest')),
+  GEMINI_MODEL: z.preprocess(emptyToUndefined, z.string().default('gemini-3.5-flash-lite')),
   GEMINI_FALLBACK_MODELS: z.preprocess(
     emptyToUndefined,
-    z.string().default('gemini-2.5-flash,gemini-2.5-flash-lite')
+    z.string().default('gemini-3.5-flash,gemini-flash-latest')
   ),
   GEMINI_BASE_URL: z.preprocess(emptyToUndefined, z.url().optional()),
   GEMINI_TIMEOUT_MS: z.preprocess(
     emptyToUndefined,
-    z.coerce.number().int().positive().default(20000)
+    z.coerce.number().int().positive().default(10000)
   ),
   CORS_ORIGINS: z.preprocess(emptyToUndefined, z.string().default('*')),
   RATE_LIMIT_PER_MINUTE: z.preprocess(
