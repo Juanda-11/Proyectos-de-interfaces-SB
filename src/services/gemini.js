@@ -39,7 +39,7 @@ export function createGeminiClient({
   apiKey,
   model,
   fallbackModels = [],
-  timeoutMs = 20000,
+  timeoutMs = 10000,
   fetchImpl = globalThis.fetch,
   baseUrl,
 }) {

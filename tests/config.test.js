@@ -5,8 +5,8 @@ describe('loadConfig', () => {
   it('aplica valores por defecto', () => {
     const c = loadConfig({});
     expect(c.port).toBe(3001);
-    expect(c.gemini.model).toBe('gemini-flash-latest');
-    expect(c.gemini.fallbackModels).toEqual(['gemini-2.5-flash', 'gemini-2.5-flash-lite']);
+    expect(c.gemini.model).toBe('gemini-3.5-flash-lite');
+    expect(c.gemini.fallbackModels).toEqual(['gemini-3.5-flash', 'gemini-flash-latest']);
     expect(c.gemini.apiKey).toBeUndefined();
     expect(c.corsOrigins).toEqual(['*']);
   });

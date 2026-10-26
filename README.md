@@ -48,7 +48,7 @@ curl -X POST http://localhost:3001/api/diagnose \
     }
   ],
   "source": "gemini",
-  "model": "gemini-flash-latest"
+  "model": "gemini-3.5-flash-lite"
 }
 ```
 
@@ -68,15 +68,15 @@ La clave gratuita de Gemini se genera en <https://aistudio.google.com/apikey>.
 
 ### Variables de entorno
 
-| Variable                 | Por defecto                              | Descripción                                                   |
-| ------------------------ | ---------------------------------------- | ------------------------------------------------------------- |
-| `GEMINI_API_KEY`         | —                                        | Clave de Google AI Studio (obligatoria para usar la IA)       |
-| `GEMINI_MODEL`           | `gemini-flash-latest`                    | Modelo principal                                              |
-| `GEMINI_FALLBACK_MODELS` | `gemini-2.5-flash,gemini-2.5-flash-lite` | Modelos de respaldo si el principal no existe o está saturado |
-| `GEMINI_TIMEOUT_MS`      | `20000`                                  | Tiempo máximo por modelo                                      |
-| `CORS_ORIGINS`           | `*`                                      | Orígenes permitidos; admite `https://*.vercel.app`            |
-| `RATE_LIMIT_PER_MINUTE`  | `30`                                     | Peticiones por IP y minuto a `/diagnose` y `/chat`            |
-| `PORT`                   | `3001`                                   | Solo en local                                                 |
+| Variable                 | Por defecto                            | Descripción                                                   |
+| ------------------------ | -------------------------------------- | ------------------------------------------------------------- |
+| `GEMINI_API_KEY`         | —                                      | Clave de Google AI Studio (obligatoria para usar la IA)       |
+| `GEMINI_MODEL`           | `gemini-3.5-flash-lite`                | Modelo principal                                              |
+| `GEMINI_FALLBACK_MODELS` | `gemini-3.5-flash,gemini-flash-latest` | Modelos de respaldo si el principal no existe o está saturado |
+| `GEMINI_TIMEOUT_MS`      | `10000`                                | Tiempo máximo por modelo                                      |
+| `CORS_ORIGINS`           | `*`                                    | Orígenes permitidos; admite `https://*.vercel.app`            |
+| `RATE_LIMIT_PER_MINUTE`  | `30`                                   | Peticiones por IP y minuto a `/diagnose` y `/chat`            |
+| `PORT`                   | `3001`                                 | Solo en local                                                 |
 
 > En producción `CORS_ORIGINS` debe contener la URL del frontend en lugar de `*`.
 
